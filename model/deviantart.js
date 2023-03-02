@@ -28,7 +28,12 @@ class DeviantArt {
                 })                    
                 .on('end', () => {
                     // @todo might not be there or ok
-                    resolve(JSON.parse(Buffer.concat(data).toString()).access_token);
+                    const result = JSON.parse(Buffer.concat(data).toString());
+                    //console.log(result);
+                    resolve(result.access_token);
+                })
+                .on('error', (e) => {
+                    reject("Can't connect : "+e.message);
                 });
             })
             .on('error', (e) => {
@@ -39,7 +44,6 @@ class DeviantArt {
 
     #paginated(url, offset = 0, concatedData = []) {
         return new Promise((resolve, reject) => {
-
             https.get(url+"&offset="+offset, (res) => {
                 let data = [];
                 res.on('data', chunk => {
@@ -48,6 +52,7 @@ class DeviantArt {
                 .on('end', () => {
                     // @todo test status code
                     const result = JSON.parse(Buffer.concat(data).toString());
+                    //console.log(result);
                     if (result.has_more) {                        
                         const paginateNext = this.#paginated(url, result.next_offset, concatedData.concat(result.results));
                         paginateNext.then((nextData) => {
@@ -56,6 +61,9 @@ class DeviantArt {
                     } else {
                         resolve(concatedData.concat(result.results));
                     }
+                })
+                .on('error', (e) => {
+                    reject("Can't connect : "+e.message);
                 });
             })
             .on('error', (e) => {
