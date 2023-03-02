@@ -1,5 +1,4 @@
 const http = require('http');
-const html = require('html');
 const express = require('express');
 
 const app = express();
