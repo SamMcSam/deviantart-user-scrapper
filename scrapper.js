@@ -7,9 +7,14 @@ mongoose.connect( process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTop
   .then(() => console.log('mongo OK'))
   .catch(() => console.log('Oops'));
 
-deviantart.friends("lesam").then((users) => {
-    users.forEach(data => {
-        const savedUser = new User({name: data.user.username});
-        savedUser.save();
+let username = process.argv.slice(2);
+if (Array.isArray(username) && username.length > 0) {
+    deviantart.friends(username).then((users) => {
+        users.forEach(data => {
+            const savedUser = new User({name: data.user.username});
+            savedUser.save();
+        });
     });
-});
+} else {
+    console.error("missing parameter");
+}
