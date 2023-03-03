@@ -12,3 +12,5 @@ if (Array.isArray(username) && username.length > 0) {
 } else {
     console.error("missing parameter");
 }
+
+//process.exit();

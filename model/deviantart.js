@@ -56,7 +56,7 @@ class DeviantArt {
                     if (result.has_more) {                        
                         const paginateNext = this.#paginated(url, result.next_offset, concatedData.concat(result.results));
                         paginateNext.then((nextData) => {
-                            resolve(concatedData.concat(nextData));
+                            resolve(nextData);
                         });
                     } else {
                         resolve(concatedData.concat(result.results));
